@@ -4,13 +4,11 @@
 
 import tensorflow as tf
 import tensorflow_datasets as tfds
-import xml.etree.cElementTree as et
-import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import datetime
 import os
-from PIL import Image, ImageFilter
+from PIL import Image
 
 
 def load_dataset():
@@ -26,7 +24,7 @@ def load_dataset():
                                              shuffle_files=True,
                                              as_supervised=False,
                                              with_info=True,
-                                             data_dir='../data/tfds')
+                                             data_dir='data/tfds')
     return ds_train, ds_test, ds_info
 
 
@@ -138,7 +136,7 @@ def load_image(url_list, output_shape=(224, 224, 3)):
     img_list = []
     file_list = []
     for idx, url in enumerate(url_list):
-        file_name = f"{cwd}/../data/downloads/image-{timestamp}_{idx+1}.jpg"
+        file_name = f"{cwd}/data/downloads/image-{timestamp}_{idx+1}.jpg"
         image_file = tf.keras.utils.get_file(file_name, url, extract=True)
         img = tf.keras.preprocessing.image.load_img(image_file).resize(output_shape[:-1])
         img_list.append(tf.keras.preprocessing.image.img_to_array(img) / 255.)
@@ -148,7 +146,7 @@ def load_image(url_list, output_shape=(224, 224, 3)):
 
 def load_labels():
     breed_names = []
-    with open("../data/breed_names.txt", 'r') as f:
+    with open("data/breed_names.txt", 'r') as f:
         for line in f:
             line = line.rstrip()
             line = line.split('-')[1:]

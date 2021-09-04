@@ -1,8 +1,12 @@
+# Utilities for identifying dog breeds.
+#
+# Ari Biswas, 08/03/2021
+
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+
 import math
 import numpy
-import argparse
 import tensorflow as tf
 import dataprocessor as proc
 import matplotlib.pyplot as plt
@@ -10,7 +14,7 @@ from model import load_model
 from PIL import Image
 
 
-model = load_model('../trained_models/model_1.h5')
+model = load_model('trained_models/model_1.h5')
 input_shape = model.layers[0].input_shape[1:]
 num_breeds = model.layers[-1].output_shape[1]
 ds_train, ds_test, ds_info = proc.load_dataset()
@@ -52,7 +56,7 @@ def predict(x, top_k=5, verbose=True):
     return predictions
 
 
-def main(url=None):
+def run_classifier(url=None):
     if url is None:
         url = []
         while True:
@@ -94,11 +98,3 @@ def main(url=None):
 
     plt.tight_layout(pad=2.0)
     plt.show()
-
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='Dog breed classifier.')
-    parser.add_argument('--url', metavar='image_url', type=str, nargs='+', default=None, help='URL of the image.')
-    args = parser.parse_args()
-    # main(args.url)
-    main(test_url)

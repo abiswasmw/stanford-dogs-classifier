@@ -1,3 +1,7 @@
+# Models for training.
+#
+# Ari Biswas, 08/03/2021
+
 import tensorflow as tf
 from tensorflow.keras.applications.vgg16 import VGG16
 from tensorflow.keras.applications.resnet50 import ResNet50

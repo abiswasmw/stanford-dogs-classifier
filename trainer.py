@@ -1,3 +1,7 @@
+# Utilities for training a dog breed classifier.
+#
+# Ari Biswas, 08/03/2021
+
 import tensorflow as tf
 import model as mdl
 import dataprocessor as proc
@@ -6,10 +10,10 @@ import datetime
 
 
 timestamp_str = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
-save_path = "../trained_models"
-checkpoint_path = "../checkpoints/" + timestamp_str + "/model.ckpt"
+save_path = "trained_models"
+checkpoint_path = "checkpoints/" + timestamp_str + "/model.ckpt"
 checkpoint_dir = os.path.dirname(checkpoint_path)
-log_dir = "../logs/fit/" + timestamp_str
+log_dir = "logs/fit/" + timestamp_str
 
 input_shape = (224, 224, 3)
 num_breeds = 120

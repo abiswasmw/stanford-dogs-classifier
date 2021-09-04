@@ -1,7 +1,6 @@
 import unittest
 import tensorflow_datasets as tfds
-from src import dataprocessor as proc
-from PIL import Image
+import dataprocessor as proc
 
 
 class PreprocessingTestCase(unittest.TestCase):
