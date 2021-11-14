@@ -153,15 +153,12 @@ ds_train, ds_test, ds_info = load_dataset()
 train_batches = prepare(ds_train)
 test_batches  = prepare(ds_test)
 ```
-Use the fit function to train the model. I also add a few callbacks for visualization (TensorBoard) and saving the model.
+
+Use the *[tf.keras.Model.fit()](https://www.tensorflow.org/api_docs/python/tf/keras/Model#fit)* method to train the model. I also like using a few callbacks for visualization (TensorBoard) and saving the model.
 ```
-import datetime
-
-log_dir = "logs/fit/" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
-
 # Create a callback for visualization in TensorBoard
-# This will save training metrics inside the log_dir folder 
-tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir,
+# This will save training metrics inside the "logs" folder 
+tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir="logs",
                                                       histogram_freq=1,
                                                       profile_batch=0 )
 						      
@@ -178,22 +175,78 @@ net.fit(
         callbacks=[tensorboard_callback, cp_callback]
        )
 
-# save the model weights
-net.save(save_path + "/mobilenet_1")
+# Save the model weights
+net.save("trained_models/model_1.h5")
 ```
+
 You can visualize the training progress using TensorBoard. From a different terminal, execute the following command.
 ```
-tensorboard --logdir logs/fit/<TIMESTAMP_FOLDER_NAME>
+tensorboard --logdir logs
 ```
+
 This will output something like this. Click on the link to see the training in a browser.
 ```
 Serving TensorBoard on localhost; to expose to the network, use a proxy or pass --bind_all
 TensorBoard 2.5.0 at http://localhost:6006/ (Press CTRL+C to quit)
 
 ```
+
 The model achieved around 83% accuracy (training) and 75% accuracy (validation). The top-k categorical accuracy was significantly higher at 98% (training) and 95% (validation). The results are shown below.
+
 ![Results_image](./resources/train_result.png)
+
+Overall, the model achieved reasonable results after training. You can test the performance of the model using the ***run.py** script.
+
+### Test model performance
+
+Once the model is trained you can use the model to predict dog breeds. The ***classify.py*** module contains the APIs for predictions.
+
+Load the model.
+```
+model = tf.keras.models.load_model("trained_models/model_1.h5")
+```
+Write a function to make predictions.
+```
+def predict(x, top_k=5):
+    if tf.is_tensor(x):
+        x = tf.reshape(x[0], [1] + list(input_shape))
+    elif isinstance(x, numpy.ndarray):
+        assert x.shape == input_shape
+        x = tf.reshape(x, [1] + list(input_shape))
+
+    # predict
+    pred = model.predict(x)
+    top_k_pred, top_k_indices = tf.math.top_k(pred, k=top_k)
+
+    # display the prediction
+    predictions = dict()
+    for ct in range(top_k):
+        name = ds_info.features['label'].int2str(top_k_indices[0][ct])
+        name = "".join(name.split('-')[1:])
+        value = top_k_pred.numpy()[0][ct]
+        predictions[name] = value
+        print(name + " : {:.2f}%".format(value*100))
+	
+    return predictions
+```
+
+Load an image from a URL and make predictions. Make sure to resize the image to (224,224) before calling predict().
+```
+url = "https://media.nature.com/lw800/magazine-assets/d41586-020-03053-2/d41586-020-03053-2_18533904.jpg"
+file_name = "downloaded_image.jpg"
+image_file = tf.keras.utils.get_file(file_name, url, extract=True)
+img = tf.keras.preprocessing.image.load_img(image_file).resize((224,224))
+
+predictions = predict(img, top_k=3)
+```
+
+This will print the predictions in the terminal.
+```
+dingo : 86.48%
+kelpie : 4.49%
+german_shepherd : 2.30%
+```
 
 ### Conclusion
 
-Overall, the model achieved reasonable results after training. You can test the performance of the model using the ***run.py** script.
+This was a fun project to work on, it covers the basic workflows on image classification. In the future I intend to develop a deployment workflow for this project. If you have any feedback feel free to provide it.
