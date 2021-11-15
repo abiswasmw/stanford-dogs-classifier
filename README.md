@@ -157,6 +157,11 @@ test_batches  = prepare(ds_test)
 
 Training is pretty simple to set up using the *[tf.keras.Model.fit()](https://www.tensorflow.org/api_docs/python/tf/keras/Model#fit)* method.
 ```
+input_shape = (224,224,3)
+num_breeds = 120
+learn_rate = 0.0001
+net = mobilenet(input_shape, num_breeds, learn_rate)
+
 net.fit(
         train_batches,
         epochs=10,
