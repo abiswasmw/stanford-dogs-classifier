@@ -52,13 +52,15 @@ python run.py --url <url1> <url2> ...
 
 ## Tutorial
 
-The goal of this project is to build a classifier model that can accurately predict dog breeds from images. I use TensorFlow 2.0 and the [standford-dogs](https://www.tensorflow.org/datasets/catalog/stanford_dogs) TensorFlow Dataset to train the classifier. Following are the high level steps for reproducing my results:
+The goal of this project is to build a classifier model that can accurately predict dog breeds from images. I use TensorFlow 2.0 to train a model on the [standford-dogs](https://www.tensorflow.org/datasets/catalog/stanford_dogs) TensorFlow Dataset. The dataset contains images of 120 dog breeds from around the world.
+
+I will explain the high level steps for reproducing my results in tne following sections.
 
 ### Download and preprocess dataset
 
-The stanford-dogs dataset contains images of 120 dog breeds from around the world. The first step is to download the dataset in your project folder. The ***dataprocessor.py*** module contains the required utilities to download and preprocess the images. I will explain the high level steps in details.
+The ***[dataprocessor.py](https://github.com/aribiswas/stanford-dogs-classifier/blob/master/dataprocessor.py)*** module contains the required functions to download and preprocess the images.
 
-Write a function to download the dataset. I use the *[tfds.load](https://www.tensorflow.org/datasets/api_docs/python/tfds/load)* function which downloads the dataset to a folder of your choice (data/tfds in the code).
+I used the *[tfds.load](https://www.tensorflow.org/datasets/api_docs/python/tfds/load)* function to download the dataset to a folder of your choice (data/tfds in the code). Write a function to download the dataset.
 ```
 import tensorflow as tf
 import tensorflow_datasets as tfds
@@ -74,16 +76,18 @@ def load_dataset():
                                           )
         return ds_train, ds_test, ds_info
 ```
-Use the *[tfds.show_examples()](https://www.tensorflow.org/datasets/api_docs/python/tfds/visualization/show_examples)* function to view a few sample images from the dataset.
+
+After downloading, you can use the *[tfds.show_examples()](https://www.tensorflow.org/datasets/api_docs/python/tfds/visualization/show_examples)* function to view a few sample images from the dataset.
 ```
 ds_train, _, ds_info = load_dataset()
 tfds.show_examples(ds_train, ds_info)
 ```
+
 ![Example_Image](./resources/examples.png)
 
-Note that the images in the dataset have different sizes. In order to train an accurate model from these images, you need to resize the images to a reasonable size. An analysis of image dimension distributions is shown below. The red line shows the dimension (in pixels) with maximum frequency. We can infer that most images have width and height between 200-500 pixels.
+Notice that the images in the dataset have different sizes. In order to train an accurate model from these images, you need to resize the images to a reasonable size. An analysis of image dimension distributions is shown below. The red line shows the dimension (in pixels) with maximum frequency. We can infer that most images have width and height between 200-500 pixels.
 
-To generate the histograms, you can use the  *analyze()* function in ***dataprocessor.py***.
+To generate the histograms, you can use the  *analyze()* function in *dataprocessor.py*.
 ```
 import dataprocessor as proc
 proc.analyze()
@@ -195,7 +199,7 @@ The model achieved around 83% accuracy (training) and 75% accuracy (validation).
 
 ![Results_image](./resources/train_result.png)
 
-Overall, the model achieved reasonable results after training. You can test the performance of the model using the ***run.py** script.
+Overall, the model achieved reasonable results after training. You can test the performance of the model using the ***run.py*** script.
 
 ### Test model performance
 
@@ -208,6 +212,7 @@ model = tf.keras.models.load_model("trained_models/model_1.h5")
 Write a function to make predictions.
 ```
 def predict(x, top_k=5):
+    input_shape = model.layers[0].input_shape[1:]
     if tf.is_tensor(x):
         x = tf.reshape(x[0], [1] + list(input_shape))
     elif isinstance(x, numpy.ndarray):
@@ -249,4 +254,4 @@ german_shepherd : 2.30%
 
 ### Conclusion
 
-This was a fun project to work on, it covers the basic workflows on image classification. In the future I intend to develop a deployment workflow for this project. If you have any feedback feel free to provide it.
+This project covers the basics of image classification. In the future I intend to develop a deployment workflow for this project. Feel free to provide your feedback.
