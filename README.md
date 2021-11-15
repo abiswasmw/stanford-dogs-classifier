@@ -12,7 +12,7 @@ This project builds a classifier that can predict dog breeds from images. The cl
    * [Download and preprocess dataset](#Download-and-preprocess-dataset)
    * [Create a machine learning model](#Create-a-machine-learning-model)
    * [Train the model](#Train-the-model)
-   * Test model performance(#Test-model-performance)
+   * [Test model performance](#Test-model-performance)
 4. [Conclusion](#Conclusion)
 
 ## Installation and Setup
