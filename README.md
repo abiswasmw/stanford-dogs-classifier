@@ -7,12 +7,13 @@ This project builds a classifier that can predict dog breeds from images. The cl
 
 ## Contents
 1. [Intallation and Setup](#Intallation-and-Setup)
-2. Run
-3. Tutorial
-   * Download and preprocess dataset
-   * Create a machine learning model
-   * Train the model
-4. Conclusion
+2. [Run](#Run)
+3. [Tutorial](#Tutorial)
+   * [Download and preprocess dataset](#Download-and-preprocess-dataset)
+   * [Create a machine learning model](#Create-a-machine-learning-model)
+   * [Train the model](#Train-the-model)
+   * Test model performance(#Test-model-performance)
+4. [Conclusion](#Conclusion)
 
 ## Installation and Setup
 
@@ -259,7 +260,7 @@ kelpie : 4.49%
 german_shepherd : 2.30%
 ```
 
-### Conclusion
+## Conclusion
 
 This project covers the basics of image classification. In the future I intend to develop a deployment workflow for this project. 
 
